@@ -423,9 +423,13 @@ mod test {
     use std::str::from_str;
     use types;
 
+    use types::FromRaw;
+    use types::Type;
+
     #[test]
     fn test_a_from_raw() {
-        assert_eq!(types::Type::A, types::Type.from_raw(1));
+        let t = Type.from_raw(1);
+        assert_eq!(types::Type::A, t);
     }
 
     #[test]

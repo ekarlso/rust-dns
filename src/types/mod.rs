@@ -1,6 +1,6 @@
-use std::str::FromStr;
+pub mod rcode;
 
-pub enum Types {
+pub enum Type {
     NONE = 0,
     A = 1,
     NS = 2,
@@ -82,7 +82,10 @@ pub enum Types {
     Reserved = 65535,
 }
 
-// impl FromStr for Types {};
+/*impl FromStr for Type {
+    fn from_str(s: &str) -> Option<Type> {
+    }
+}*/
 
 pub enum Class {
     INET = 1,
@@ -91,28 +94,6 @@ pub enum Class {
     HESIOD = 4,
     NONE = 254,
     ANY = 255
-}
-
-pub enum Rcode {
-    Success = 0,
-    FormatError = 1,
-    ServerFailure = 2,
-    NameError = 3,
-    NotImplemented = 4,
-    Refused = 5,
-    YXDomain = 6,
-    YXRrset = 7,
-    NXRrset = 8,
-    NotAuth = 9,
-    NotZone = 10,
-    BadSig = 16,  // this
-    // BadVers = 16, // ... and this  have the same discriminant
-    BadKey = 17,
-    BadTime = 18,
-    BadMode = 19,
-    BadName = 20,
-    BadAlg = 21,
-    BadTrunc = 22,
 }
 
 pub enum Opcode {
@@ -138,8 +119,11 @@ pub enum Certs {
 
 #[cfg(test)]
 mod test {
+    use types::Type;
+
     #[test]
     fn test_test () {
+        let i = Type::A;
     //    assert_eq!(tupes::from_str("A"), 1);
     }
 }

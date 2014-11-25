@@ -1,11 +1,11 @@
+use std::default;
 use std::str::FromStr;
 
 pub trait FromRaw {
     fn from_raw (r: int) -> Self;
 }
 
-#[repr(u16)]
-#[deriving(Show,PartialEq)]
+#[deriving(Clone,Show,PartialEq)]
 pub enum Cert {
     PKIX = 1,
     SPKI = 2,
@@ -57,8 +57,7 @@ impl FromStr for Cert {
     }
 }
 
-#[repr(u16)]
-#[deriving(Show,PartialEq)]
+#[deriving(Clone,Show,PartialEq)]
 pub enum Class {
     INET = 1,
     CSNET = 2,
@@ -98,8 +97,12 @@ impl FromStr for Class {
     }
 }
 
+impl default::Default for Class {
+  fn default() -> Class { Class::INET }
+}
+
 #[repr(u16)]
-#[deriving(Show,PartialEq)]
+#[deriving(Clone,Show,PartialEq)]
 pub enum Opcode {
     QUERY = 0,
     IQUERY = 1,
@@ -134,6 +137,10 @@ impl FromStr for Opcode {
 
         Some(i)
     }
+}
+
+impl default::Default for Opcode {
+  fn default() -> Opcode { Opcode::QUERY }
 }
 
 // Return codes
@@ -184,7 +191,7 @@ pub fn rcode_from_str(s: &str) -> u16 {
 }
 
 #[repr(u16)]
-#[deriving(Show,PartialEq)]
+#[deriving(Clone,Show,PartialEq)]
 pub enum Type {
     NONE = 0,
     A = 1,
@@ -265,6 +272,93 @@ pub enum Type {
     TA = 32768,
     DLV = 32769,
     Reserved = 65535,
+}
+
+impl FromRaw for Type {
+    fn from_raw(r: int) -> Type {
+        match r {
+            0       => Type::NONE,
+            1       => Type::A,
+            2       => Type::NS,
+            3       => Type::MD,
+            4       => Type::MF,
+            5       => Type::CNAME,
+            6       => Type::SOA,
+            7       => Type::MB,
+            8       => Type::MG,
+            9       => Type::MR,
+            10      => Type::NULL,
+            11      => Type::WKS,
+            12      => Type::PTR,
+            13      => Type::HINFO,
+            14      => Type::MINFO,
+            15      => Type::MX,
+            16      => Type::TXT,
+            17      => Type::RP,
+            18      => Type::AFSDB,
+            19      => Type::X25,
+            20      => Type::ISDN,
+            21      => Type::RT,
+            22      => Type::NSAP,
+            23      => Type::NSAPPTR,
+            24      => Type::SIG,
+            25      => Type::KEY,
+            26      => Type::PX,
+            27      => Type::GPOS,
+            28      => Type::AAAA,
+            29      => Type::LOC,
+            30      => Type::NXT,
+            31      => Type::EID,
+            32      => Type::NIMLOC,
+            33      => Type::SRV,
+            34      => Type::ATMA,
+            35      => Type::NAPTR,
+            36      => Type::KX,
+            37      => Type::CERT,
+            39      => Type::DNAME,
+            41      => Type::OPT,
+            43      => Type::DS,
+            44      => Type::SSHFP,
+            45      => Type::IPSECKEY,
+            46      => Type::RRSIG,
+            47      => Type::NSEC,
+            48      => Type::DNSKEY,
+            49      => Type::DHCID,
+            50      => Type::NSEC3,
+            51      => Type::NSEC3PARAM,
+            52      => Type::TLSA,
+            55      => Type::HIP,
+            56      => Type::NINFO,
+            57      => Type::RKEY,
+            58      => Type::TALINK,
+            59      => Type::CDS,
+            61      => Type::OPENPGPKEY,
+            99      => Type::SPF,
+            100     => Type::UINFO,
+            101     => Type::UID,
+            102     => Type::GID,
+            103     => Type::UNSPEC,
+            104     => Type::NID,
+            105     => Type::L32,
+            106     => Type::L64,
+            107     => Type::LP,
+            108     => Type::EUI48,
+            109     => Type::EUI64,
+            249     => Type::TKEY,
+            250     => Type::TSIG,
+            251     => Type::IXFR,
+            252     => Type::AXFR,
+            253     => Type::MAILB,
+            254     => Type::MAILA,
+            255     => Type::ANY,
+            256     => Type::URI,
+            257     => Type::CAA,
+            32768   => Type::TA,
+            32769   => Type::DLV,
+            65535   => Type::Reserved,
+            _       => panic!("Invalid Type")
+        }
+    }
 }
 
 impl FromStr for Type {
@@ -354,94 +448,10 @@ impl FromStr for Type {
 
         Some(i)
     }
-
 }
 
-impl FromRaw for Type {
-    fn from_raw(r: int) -> Type {
-        match r {
-            0       => Type::NONE,
-            1       => Type::A,
-            2       => Type::NS,
-            3       => Type::MD,
-            4       => Type::MF,
-            5       => Type::CNAME,
-            6       => Type::SOA,
-            7       => Type::MB,
-            8       => Type::MG,
-            9       => Type::MR,
-            10      => Type::NULL,
-            11      => Type::WKS,
-            12      => Type::PTR,
-            13      => Type::HINFO,
-            14      => Type::MINFO,
-            15      => Type::MX,
-            16      => Type::TXT,
-            17      => Type::RP,
-            18      => Type::AFSDB,
-            19      => Type::X25,
-            20      => Type::ISDN,
-            21      => Type::RT,
-            22      => Type::NSAP,
-            23      => Type::NSAPPTR,
-            24      => Type::SIG,
-            25      => Type::KEY,
-            26      => Type::PX,
-            27      => Type::GPOS,
-            28      => Type::AAAA,
-            29      => Type::LOC,
-            30      => Type::NXT,
-            31      => Type::EID,
-            32      => Type::NIMLOC,
-            33      => Type::SRV,
-            34      => Type::ATMA,
-            35      => Type::NAPTR,
-            36      => Type::KX,
-            37      => Type::CERT,
-            39      => Type::DNAME,
-            41      => Type::OPT,
-            43      => Type::DS,
-            44      => Type::SSHFP,
-            45      => Type::IPSECKEY,
-            46      => Type::RRSIG,
-            47      => Type::NSEC,
-            48      => Type::DNSKEY,
-            49      => Type::DHCID,
-            50      => Type::NSEC3,
-            51      => Type::NSEC3PARAM,
-            52      => Type::TLSA,
-            55      => Type::HIP,
-            56      => Type::NINFO,
-            57      => Type::RKEY,
-            58      => Type::TALINK,
-            59      => Type::CDS,
-            61      => Type::OPENPGPKEY,
-            99      => Type::SPF,
-            100     => Type::UINFO,
-            101     => Type::UID,
-            102     => Type::GID,
-            103     => Type::UNSPEC,
-            104     => Type::NID,
-            105     => Type::L32,
-            106     => Type::L64,
-            107     => Type::LP,
-            108     => Type::EUI48,
-            109     => Type::EUI64,
-            249     => Type::TKEY,
-            250     => Type::TSIG,
-            251     => Type::IXFR,
-            252     => Type::AXFR,
-            253     => Type::MAILB,
-            254     => Type::MAILA,
-            255     => Type::ANY,
-            256     => Type::URI,
-            257     => Type::CAA,
-            32768   => Type::TA,
-            32769   => Type::DLV,
-            65535   => Type::Reserved,
-            _       => panic!("Invalid Type")
-        }
-    }
+impl default::Default for Type {
+  fn default() -> Type { Type::A }
 }
 
 #[cfg(test)]

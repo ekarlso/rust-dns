@@ -3,6 +3,7 @@
 extern crate libc;
 extern crate regex;
 
+pub mod client;
 pub mod io;
 pub mod ip;
 pub mod message;

@@ -2,7 +2,7 @@ use std::default;
 use std::str::FromStr;
 
 pub trait FromRaw {
-    fn from_raw (r: int) -> Self;
+    fn from_raw (r: int) -> Option<Self>;
 }
 
 #[deriving(Clone,Show,PartialEq)]
@@ -20,40 +20,38 @@ pub enum Cert {
 }
 
 impl FromRaw for Cert {
-    fn from_raw (r: int) -> Cert {
+    fn from_raw (r: int) -> Option<Cert> {
         match r {
-            1   => Cert::PKIX,
-            2   => Cert::SPKI,
-            3   => Cert::PGP,
-            4   => Cert::IPKIX,
-            5   => Cert::ISPKI,
-            6   => Cert::IPGP,
-            7   => Cert::ACPKIX,
-            8   => Cert::IACPKIX,
-            253 => Cert::URI,
-            254 => Cert::OID,
-            _   => panic!("Invalid Cert")
+            1   => Some(Cert::PKIX),
+            2   => Some(Cert::SPKI),
+            3   => Some(Cert::PGP),
+            4   => Some(Cert::IPKIX),
+            5   => Some(Cert::ISPKI),
+            6   => Some(Cert::IPGP),
+            7   => Some(Cert::ACPKIX),
+            8   => Some(Cert::IACPKIX),
+            253 => Some(Cert::URI),
+            254 => Some(Cert::OID),
+            _   => None
         }
     }
 }
 
 impl FromStr for Cert {
     fn from_str(s: &str) -> Option<Cert> {
-        let i = match s {
-            "PKIX"         => Cert::PKIX,
-            "SPKI"         => Cert::SPKI,
-            "PGP"          => Cert::PGP,
-            "IPKIX"        => Cert::IPKIX,
-            "ISPKI"        => Cert::ISPKI,
-            "IPGP"         => Cert::IPGP,
-            "ACPKIX"       => Cert::ACPKIX,
-            "IACPKIX"      => Cert::IACPKIX,
-            "URI"          => Cert::URI,
-            "OID"          => Cert::OID,
-            _              => panic!("Invalid Cert")
-        };
-
-        Some(i)
+        match s {
+            "PKIX"         => Some(Cert::PKIX),
+            "SPKI"         => Some(Cert::SPKI),
+            "PGP"          => Some(Cert::PGP),
+            "IPKIX"        => Some(Cert::IPKIX),
+            "ISPKI"        => Some(Cert::ISPKI),
+            "IPGP"         => Some(Cert::IPGP),
+            "ACPKIX"       => Some(Cert::ACPKIX),
+            "IACPKIX"      => Some(Cert::IACPKIX),
+            "URI"          => Some(Cert::URI),
+            "OID"          => Some(Cert::OID),
+            _              => None
+        }
     }
 }
 
@@ -68,32 +66,30 @@ pub enum Class {
 }
 
 impl FromRaw for Class {
-    fn from_raw (r: int) -> Class {
+    fn from_raw (r: int) -> Option<Class> {
         match r {
-            1       => Class::INET,
-            2       => Class::CSNET,
-            3       => Class::CHAOS,
-            4       => Class::HESIOD,
-            254     => Class::NONE,
-            255     => Class::ANY,
-            _       => panic!("Invalid Class")
+            1       => Some(Class::INET),
+            2       => Some(Class::CSNET),
+            3       => Some(Class::CHAOS),
+            4       => Some(Class::HESIOD),
+            254     => Some(Class::NONE),
+            255     => Some(Class::ANY),
+            _       => None
         }
     }
 }
 
 impl FromStr for Class {
     fn from_str(s: &str) -> Option<Class> {
-        let i = match s {
-            "INET"         => Class::INET,
-            "CSNET"        => Class::CSNET,
-            "CHAOS"        => Class::CHAOS,
-            "HESIOD"       => Class::HESIOD,
-            "NONE"         => Class::NONE,
-            "ANY"          => Class::ANY,
-            _              => panic!("Invalid Class")
-        };
-
-        Some(i)
+        match s {
+            "INET"         => Some(Class::INET),
+            "CSNET"        => Some(Class::CSNET),
+            "CHAOS"        => Some(Class::CHAOS),
+            "HESIOD"       => Some(Class::HESIOD),
+            "NONE"         => Some(Class::NONE),
+            "ANY"          => Some(Class::ANY),
+            _              => None
+        }
     }
 }
 
@@ -112,30 +108,28 @@ pub enum Opcode {
 }
 
 impl FromRaw for Opcode {
-    fn from_raw(r: int) -> Opcode {
+    fn from_raw(r: int) -> Option<Opcode> {
         match r {
-            0        => Opcode::QUERY,
-            1       => Opcode::IQUERY,
-            2       => Opcode::STATUS,
-            4       => Opcode::NOTIFY,
-            5       => Opcode::UPDATE,
-            _              => panic!("Invalid Opcode")
+            0   => Some(Opcode::QUERY),
+            1   => Some(Opcode::IQUERY),
+            2   => Some(Opcode::STATUS),
+            4   => Some(Opcode::NOTIFY),
+            5   => Some(Opcode::UPDATE),
+            _   => None
         }
     }
 }
 
 impl FromStr for Opcode {
     fn from_str(s: &str) -> Option<Opcode> {
-        let i = match s {
-            "QUERY"        => Opcode::QUERY,
-            "IQUERY"       => Opcode::IQUERY,
-            "STATUS"       => Opcode::STATUS,
-            "NOTIFY"       => Opcode::NOTIFY,
-            "UPDATE"       => Opcode::UPDATE,
-            _              => panic!("Invalid Opcode")
-        };
-
-        Some(i)
+        match s {
+            "QUERY"        => Some(Opcode::QUERY),
+            "IQUERY"       => Some(Opcode::IQUERY),
+            "STATUS"       => Some(Opcode::STATUS),
+            "NOTIFY"       => Some(Opcode::NOTIFY),
+            "UPDATE"       => Some(Opcode::UPDATE),
+            _              => None
+        }
     }
 }
 
@@ -165,27 +159,27 @@ pub const BADALG: u16 = 21;
 pub const BADTRUNC: u16 = 22;
 
 
-pub fn rcode_from_str(s: &str) -> u16 {
+pub fn rcode_from_str(s: &str) -> Option<u16> {
     match s {
-        "SUCCESS"   => SUCCESS,
-        "FORMERR"   => FORMERR,
-        "SERVFAIL"  => SERVFAIL,
-        "NAMEERROR" => NAMEERROR,
-        "NOTIMPL"   => NOTIMPL,
-        "REFUSED"   => REFUSED,
-        "YXDOMAIN"  => YXDOMAIN,
-        "YXRRSET"   => YXRRSET,
-        "NXRRSET"   => NXRRSET,
-        "NOTAUTH"   => NOTAUTH,
-        "NOTZONE"   => NOTZONE,
-        "BADSIG"    => BADSIG,
-        "BADVERS"   => BADVERS,
-        "BADKEY"    => BADKEY,
-        "BADTIME"   => BADTIME,
-        "BADMODE"   => BADMODE,
-        "BADNAME"   => BADNAME,
-        "BADALG"    => BADALG,
-        "BADTRUNC"  => BADTRUNC,
+        "SUCCESS"   => Some(SUCCESS),
+        "FORMERR"   => Some(FORMERR),
+        "SERVFAIL"  => Some(SERVFAIL),
+        "NAMEERROR" => Some(NAMEERROR),
+        "NOTIMPL"   => Some(NOTIMPL),
+        "REFUSED"   => Some(REFUSED),
+        "YXDOMAIN"  => Some(YXDOMAIN),
+        "YXRRSET"   => Some(YXRRSET),
+        "NXRRSET"   => Some(NXRRSET),
+        "NOTAUTH"   => Some(NOTAUTH),
+        "NOTZONE"   => Some(NOTZONE),
+        "BADSIG"    => Some(BADSIG),
+        "BADVERS"   => Some(BADVERS),
+        "BADKEY"    => Some(BADKEY),
+        "BADTIME"   => Some(BADTIME),
+        "BADMODE"   => Some(BADMODE),
+        "BADNAME"   => Some(BADNAME),
+        "BADALG"    => Some(BADALG),
+        "BADTRUNC"  => Some(BADTRUNC),
         x           => panic!("invalid rcode {}", s)
     }
 }
@@ -275,178 +269,176 @@ pub enum Type {
 }
 
 impl FromRaw for Type {
-    fn from_raw(r: int) -> Type {
+    fn from_raw(r: int) -> Option<Type> {
         match r {
-            0       => Type::NONE,
-            1       => Type::A,
-            2       => Type::NS,
-            3       => Type::MD,
-            4       => Type::MF,
-            5       => Type::CNAME,
-            6       => Type::SOA,
-            7       => Type::MB,
-            8       => Type::MG,
-            9       => Type::MR,
-            10      => Type::NULL,
-            11      => Type::WKS,
-            12      => Type::PTR,
-            13      => Type::HINFO,
-            14      => Type::MINFO,
-            15      => Type::MX,
-            16      => Type::TXT,
-            17      => Type::RP,
-            18      => Type::AFSDB,
-            19      => Type::X25,
-            20      => Type::ISDN,
-            21      => Type::RT,
-            22      => Type::NSAP,
-            23      => Type::NSAPPTR,
-            24      => Type::SIG,
-            25      => Type::KEY,
-            26      => Type::PX,
-            27      => Type::GPOS,
-            28      => Type::AAAA,
-            29      => Type::LOC,
-            30      => Type::NXT,
-            31      => Type::EID,
-            32      => Type::NIMLOC,
-            33      => Type::SRV,
-            34      => Type::ATMA,
-            35      => Type::NAPTR,
-            36      => Type::KX,
-            37      => Type::CERT,
-            39      => Type::DNAME,
-            41      => Type::OPT,
-            43      => Type::DS,
-            44      => Type::SSHFP,
-            45      => Type::IPSECKEY,
-            46      => Type::RRSIG,
-            47      => Type::NSEC,
-            48      => Type::DNSKEY,
-            49      => Type::DHCID,
-            50      => Type::NSEC3,
-            51      => Type::NSEC3PARAM,
-            52      => Type::TLSA,
-            55      => Type::HIP,
-            56      => Type::NINFO,
-            57      => Type::RKEY,
-            58      => Type::TALINK,
-            59      => Type::CDS,
-            61      => Type::OPENPGPKEY,
-            99      => Type::SPF,
-            100     => Type::UINFO,
-            101     => Type::UID,
-            102     => Type::GID,
-            103     => Type::UNSPEC,
-            104     => Type::NID,
-            105     => Type::L32,
-            106     => Type::L64,
-            107     => Type::LP,
-            108     => Type::EUI48,
-            109     => Type::EUI64,
-            249     => Type::TKEY,
-            250     => Type::TSIG,
-            251     => Type::IXFR,
-            252     => Type::AXFR,
-            253     => Type::MAILB,
-            254     => Type::MAILA,
-            255     => Type::ANY,
-            256     => Type::URI,
-            257     => Type::CAA,
-            32768   => Type::TA,
-            32769   => Type::DLV,
-            65535   => Type::Reserved,
-            _       => panic!("Invalid Type")
+            0       => Some(Type::NONE),
+            1       => Some(Type::A),
+            2       => Some(Type::NS),
+            3       => Some(Type::MD),
+            4       => Some(Type::MF),
+            5       => Some(Type::CNAME),
+            6       => Some(Type::SOA),
+            7       => Some(Type::MB),
+            8       => Some(Type::MG),
+            9       => Some(Type::MR),
+            10      => Some(Type::NULL),
+            11      => Some(Type::WKS),
+            12      => Some(Type::PTR),
+            13      => Some(Type::HINFO),
+            14      => Some(Type::MINFO),
+            15      => Some(Type::MX),
+            16      => Some(Type::TXT),
+            17      => Some(Type::RP),
+            18      => Some(Type::AFSDB),
+            19      => Some(Type::X25),
+            20      => Some(Type::ISDN),
+            21      => Some(Type::RT),
+            22      => Some(Type::NSAP),
+            23      => Some(Type::NSAPPTR),
+            24      => Some(Type::SIG),
+            25      => Some(Type::KEY),
+            26      => Some(Type::PX),
+            27      => Some(Type::GPOS),
+            28      => Some(Type::AAAA),
+            29      => Some(Type::LOC),
+            30      => Some(Type::NXT),
+            31      => Some(Type::EID),
+            32      => Some(Type::NIMLOC),
+            33      => Some(Type::SRV),
+            34      => Some(Type::ATMA),
+            35      => Some(Type::NAPTR),
+            36      => Some(Type::KX),
+            37      => Some(Type::CERT),
+            39      => Some(Type::DNAME),
+            41      => Some(Type::OPT),
+            43      => Some(Type::DS),
+            44      => Some(Type::SSHFP),
+            45      => Some(Type::IPSECKEY),
+            46      => Some(Type::RRSIG),
+            47      => Some(Type::NSEC),
+            48      => Some(Type::DNSKEY),
+            49      => Some(Type::DHCID),
+            50      => Some(Type::NSEC3),
+            51      => Some(Type::NSEC3PARAM),
+            52      => Some(Type::TLSA),
+            55      => Some(Type::HIP),
+            56      => Some(Type::NINFO),
+            57      => Some(Type::RKEY),
+            58      => Some(Type::TALINK),
+            59      => Some(Type::CDS),
+            61      => Some(Type::OPENPGPKEY),
+            99      => Some(Type::SPF),
+            100     => Some(Type::UINFO),
+            101     => Some(Type::UID),
+            102     => Some(Type::GID),
+            103     => Some(Type::UNSPEC),
+            104     => Some(Type::NID),
+            105     => Some(Type::L32),
+            106     => Some(Type::L64),
+            107     => Some(Type::LP),
+            108     => Some(Type::EUI48),
+            109     => Some(Type::EUI64),
+            249     => Some(Type::TKEY),
+            250     => Some(Type::TSIG),
+            251     => Some(Type::IXFR),
+            252     => Some(Type::AXFR),
+            253     => Some(Type::MAILB),
+            254     => Some(Type::MAILA),
+            255     => Some(Type::ANY),
+            256     => Some(Type::URI),
+            257     => Some(Type::CAA),
+            32768   => Some(Type::TA),
+            32769   => Some(Type::DLV),
+            65535   => Some(Type::Reserved),
+            _       => None
         }
     }
 }
 
 impl FromStr for Type {
    fn from_str(s: &str) -> Option<Type> {
-        let i = match s {
-            "NONE"         => Type::NONE,
-            "A"            => Type::A,
-            "NS"           => Type::NS,
-            "MD"           => Type::MD,
-            "MF"           => Type::MF,
-            "CNAME"        => Type::CNAME,
-            "SOA"          => Type::SOA,
-            "MB"           => Type::MB,
-            "MG"           => Type::MG,
-            "MR"           => Type::MR,
-            "NULL"         => Type::NULL,
-            "WKS"          => Type::WKS,
-            "PTR"          => Type::PTR,
-            "HINFO"        => Type::HINFO,
-            "MINFO"        => Type::MINFO,
-            "MX"           => Type::MX,
-            "TXT"          => Type::TXT,
-            "RP"           => Type::RP,
-            "AFSDB"        => Type::AFSDB,
-            "X25"          => Type::X25,
-            "ISDN"         => Type::ISDN,
-            "RT"           => Type::RT,
-            "NSAP"         => Type::NSAP,
-            "NSAPPTR"      => Type::NSAPPTR,
-            "SIG"          => Type::SIG,
-            "KEY"          => Type::KEY,
-            "PX"           => Type::PX,
-            "GPOS"         => Type::GPOS,
-            "AAAA"         => Type::AAAA,
-            "LOC"          => Type::LOC,
-            "NXT"          => Type::NXT,
-            "EID"          => Type::EID,
-            "NIMLOC"       => Type::NIMLOC,
-            "SRV"          => Type::SRV,
-            "ATMA"         => Type::ATMA,
-            "NAPTR"        => Type::NAPTR,
-            "KX"           => Type::KX,
-            "CERT"         => Type::CERT,
-            "DNAME"        => Type::DNAME,
-            "OPT"          => Type::OPT,
-            "DS"           => Type::DS,
-            "SSHFP"        => Type::SSHFP,
-            "IPSECKEY"     => Type::IPSECKEY,
-            "RRSIG"        => Type::RRSIG,
-            "NSEC"         => Type::NSEC,
-            "DNSKEY"       => Type::DNSKEY,
-            "DHCID"        => Type::DHCID,
-            "NSEC3"        => Type::NSEC3,
-            "NSEC3PARAM"   => Type::NSEC3PARAM,
-            "TLSA"         => Type::TLSA,
-            "HIP"          => Type::HIP,
-            "NINFO"        => Type::NINFO,
-            "RKEY"         => Type::RKEY,
-            "TALINK"       => Type::TALINK,
-            "CDS"          => Type::CDS,
-            "OPENPGPKEY"   => Type::OPENPGPKEY,
-            "SPF"          => Type::SPF,
-            "UINFO"        => Type::UINFO,
-            "UID"          => Type::UID,
-            "GID"          => Type::GID,
-            "UNSPEC"       => Type::UNSPEC,
-            "NID"          => Type::NID,
-            "L32"          => Type::L32,
-            "L64"          => Type::L64,
-            "LP"           => Type::LP,
-            "EUI48"        => Type::EUI48,
-            "EUI64"        => Type::EUI64,
-            "TKEY"         => Type::TKEY,
-            "TSIG"         => Type::TSIG,
-            "IXFR"         => Type::IXFR,
-            "AXFR"         => Type::AXFR,
-            "MAILB"        => Type::MAILB,
-            "MAILA"        => Type::MAILA,
-            "ANY"          => Type::ANY,
-            "URI"          => Type::URI,
-            "CAA"          => Type::CAA,
-            "TA"           => Type::TA,
-            "DLV"          => Type::DLV,
-            "Reserved"     => Type::Reserved,
-            _              => panic!("Invalid Type")
-        };
-
-        Some(i)
+        match s {
+            "NONE"         => Some(Type::NONE),
+            "A"            => Some(Type::A),
+            "NS"           => Some(Type::NS),
+            "MD"           => Some(Type::MD),
+            "MF"           => Some(Type::MF),
+            "CNAME"        => Some(Type::CNAME),
+            "SOA"          => Some(Type::SOA),
+            "MB"           => Some(Type::MB),
+            "MG"           => Some(Type::MG),
+            "MR"           => Some(Type::MR),
+            "NULL"         => Some(Type::NULL),
+            "WKS"          => Some(Type::WKS),
+            "PTR"          => Some(Type::PTR),
+            "HINFO"        => Some(Type::HINFO),
+            "MINFO"        => Some(Type::MINFO),
+            "MX"           => Some(Type::MX),
+            "TXT"          => Some(Type::TXT),
+            "RP"           => Some(Type::RP),
+            "AFSDB"        => Some(Type::AFSDB),
+            "X25"          => Some(Type::X25),
+            "ISDN"         => Some(Type::ISDN),
+            "RT"           => Some(Type::RT),
+            "NSAP"         => Some(Type::NSAP),
+            "NSAPPTR"      => Some(Type::NSAPPTR),
+            "SIG"          => Some(Type::SIG),
+            "KEY"          => Some(Type::KEY),
+            "PX"           => Some(Type::PX),
+            "GPOS"         => Some(Type::GPOS),
+            "AAAA"         => Some(Type::AAAA),
+            "LOC"          => Some(Type::LOC),
+            "NXT"          => Some(Type::NXT),
+            "EID"          => Some(Type::EID),
+            "NIMLOC"       => Some(Type::NIMLOC),
+            "SRV"          => Some(Type::SRV),
+            "ATMA"         => Some(Type::ATMA),
+            "NAPTR"        => Some(Type::NAPTR),
+            "KX"           => Some(Type::KX),
+            "CERT"         => Some(Type::CERT),
+            "DNAME"        => Some(Type::DNAME),
+            "OPT"          => Some(Type::OPT),
+            "DS"           => Some(Type::DS),
+            "SSHFP"        => Some(Type::SSHFP),
+            "IPSECKEY"     => Some(Type::IPSECKEY),
+            "RRSIG"        => Some(Type::RRSIG),
+            "NSEC"         => Some(Type::NSEC),
+            "DNSKEY"       => Some(Type::DNSKEY),
+            "DHCID"        => Some(Type::DHCID),
+            "NSEC3"        => Some(Type::NSEC3),
+            "NSEC3PARAM"   => Some(Type::NSEC3PARAM),
+            "TLSA"         => Some(Type::TLSA),
+            "HIP"          => Some(Type::HIP),
+            "NINFO"        => Some(Type::NINFO),
+            "RKEY"         => Some(Type::RKEY),
+            "TALINK"       => Some(Type::TALINK),
+            "CDS"          => Some(Type::CDS),
+            "OPENPGPKEY"   => Some(Type::OPENPGPKEY),
+            "SPF"          => Some(Type::SPF),
+            "UINFO"        => Some(Type::UINFO),
+            "UID"          => Some(Type::UID),
+            "GID"          => Some(Type::GID),
+            "UNSPEC"       => Some(Type::UNSPEC),
+            "NID"          => Some(Type::NID),
+            "L32"          => Some(Type::L32),
+            "L64"          => Some(Type::L64),
+            "LP"           => Some(Type::LP),
+            "EUI48"        => Some(Type::EUI48),
+            "EUI64"        => Some(Type::EUI64),
+            "TKEY"         => Some(Type::TKEY),
+            "TSIG"         => Some(Type::TSIG),
+            "IXFR"         => Some(Type::IXFR),
+            "AXFR"         => Some(Type::AXFR),
+            "MAILB"        => Some(Type::MAILB),
+            "MAILA"        => Some(Type::MAILA),
+            "ANY"          => Some(Type::ANY),
+            "URI"          => Some(Type::URI),
+            "CAA"          => Some(Type::CAA),
+            "TA"           => Some(Type::TA),
+            "DLV"          => Some(Type::DLV),
+            "Reserved"     => Some(Type::Reserved),
+            _              => None
+        }
     }
 }
 
@@ -468,61 +460,61 @@ mod test {
     // Tests for Certs
     #[test]
     fn test_cert_pkix_from_raw() {
-        let t: Cert = FromRaw::from_raw(1);
+        let t: Cert = FromRaw::from_raw(1).unwrap();
         assert_eq!(Cert::PKIX, t);
     }
 
     #[test]
     fn test_cert_spki_from_raw() {
-        let t: Cert = FromRaw::from_raw(2);
+        let t: Cert = FromRaw::from_raw(2).unwrap();
         assert_eq!(Cert::SPKI, t);
     }
 
     #[test]
     fn test_cert_pgp_from_raw() {
-        let t: Cert = FromRaw::from_raw(3);
+        let t: Cert = FromRaw::from_raw(3).unwrap();
         assert_eq!(Cert::PGP, t);
     }
 
     #[test]
     fn test_cert_ipkix_from_raw() {
-        let t: Cert = FromRaw::from_raw(4);
+        let t: Cert = FromRaw::from_raw(4).unwrap();
         assert_eq!(Cert::IPKIX, t);
     }
 
     #[test]
     fn test_cert_ispki_from_raw() {
-        let t: Cert = FromRaw::from_raw(5);
+        let t: Cert = FromRaw::from_raw(5).unwrap();
         assert_eq!(Cert::ISPKI, t);
     }
 
     #[test]
     fn test_cert_ipgp_from_raw() {
-        let t: Cert = FromRaw::from_raw(6);
+        let t: Cert = FromRaw::from_raw(6).unwrap();
         assert_eq!(Cert::IPGP, t);
     }
 
     #[test]
     fn test_cert_acpkix_from_raw() {
-        let t: Cert = FromRaw::from_raw(7);
+        let t: Cert = FromRaw::from_raw(7).unwrap();
         assert_eq!(Cert::ACPKIX, t);
     }
 
     #[test]
     fn test_cert_iacpkix_from_raw() {
-        let t: Cert = FromRaw::from_raw(8);
+        let t: Cert = FromRaw::from_raw(8).unwrap();
         assert_eq!(Cert::IACPKIX, t);
     }
 
     #[test]
     fn test_cert_uri_from_raw() {
-        let t: Cert = FromRaw::from_raw(253);
+        let t: Cert = FromRaw::from_raw(253).unwrap();
         assert_eq!(Cert::URI, t);
     }
 
     #[test]
     fn test_cert_oid_from_raw() {
-        let t: Cert = FromRaw::from_raw(254);
+        let t: Cert = FromRaw::from_raw(254).unwrap();
         assert_eq!(Cert::OID, t);
     }
 
@@ -559,37 +551,37 @@ mod test {
     // Tests for Classes
     #[test]
     fn test_class_inet_from_raw() {
-        let t: Class = FromRaw::from_raw(1);
+        let t: Class = FromRaw::from_raw(1).unwrap();
         assert_eq!(Class::INET, t);
     }
 
     #[test]
     fn test_class_csnet_from_raw() {
-        let t: Class = FromRaw::from_raw(2);
+        let t: Class = FromRaw::from_raw(2).unwrap();
         assert_eq!(Class::CSNET, t);
     }
 
     #[test]
     fn test_class_chaos_from_raw() {
-        let t: Class = FromRaw::from_raw(3);
+        let t: Class = FromRaw::from_raw(3).unwrap();
         assert_eq!(Class::CHAOS, t);
     }
 
     #[test]
     fn test_class_hesiod_from_raw() {
-        let t: Class = FromRaw::from_raw(4);
+        let t: Class = FromRaw::from_raw(4).unwrap();
         assert_eq!(Class::HESIOD, t);
     }
 
     #[test]
     fn test_class_none_from_raw() {
-        let t: Class = FromRaw::from_raw(254);
+        let t: Class = FromRaw::from_raw(254).unwrap();
         assert_eq!(Class::NONE, t);
     }
 
     #[test]
     fn test_class_any_from_raw() {
-        let t: Class = FromRaw::from_raw(255);
+        let t: Class = FromRaw::from_raw(255).unwrap();
         assert_eq!(Class::ANY, t);
     }
 
@@ -614,27 +606,27 @@ mod test {
     // Tests for Opcodes
     #[test]
     fn test_opcode_query_from_raw() {
-        let t: Opcode = FromRaw::from_raw(0);
+        let t: Opcode = FromRaw::from_raw(0).unwrap();
         assert_eq!(Opcode::QUERY, t);
     }
     #[test]
     fn test_opcode_iquery_from_raw() {
-        let t: Opcode = FromRaw::from_raw(1);
+        let t: Opcode = FromRaw::from_raw(1).unwrap();
         assert_eq!(Opcode::IQUERY, t);
     }
     #[test]
     fn test_opcode_status_from_raw() {
-        let t: Opcode = FromRaw::from_raw(2);
+        let t: Opcode = FromRaw::from_raw(2).unwrap();
         assert_eq!(Opcode::STATUS, t);
     }
     #[test]
     fn test_opcode_notify_from_raw() {
-        let t: Opcode = FromRaw::from_raw(4);
+        let t: Opcode = FromRaw::from_raw(4).unwrap();
         assert_eq!(Opcode::NOTIFY, t);
     }
     #[test]
     fn test_opcode_update_from_raw() {
-        let t: Opcode = FromRaw::from_raw(5);
+        let t: Opcode = FromRaw::from_raw(5).unwrap();
         assert_eq!(Opcode::UPDATE, t);
     }
     #[test]
@@ -1050,570 +1042,570 @@ mod test {
 
     #[test]
     fn test_rtype_none_from_raw() {
-        let t: Type = FromRaw::from_raw(0);
+        let t: Type = FromRaw::from_raw(0).unwrap();
         assert_eq!(Type::NONE, t);
     }
 
     #[test]
     fn test_rtype_a_from_raw() {
-        let t: Type = FromRaw::from_raw(1);
+        let t: Type = FromRaw::from_raw(1).unwrap();
         assert_eq!(Type::A, t);
     }
 
     #[test]
     fn test_rtype_ns_from_raw() {
-        let t: Type = FromRaw::from_raw(2);
+        let t: Type = FromRaw::from_raw(2).unwrap();
         assert_eq!(Type::NS, t);
     }
 
     #[test]
     fn test_rtype_md_from_raw() {
-        let t: Type = FromRaw::from_raw(3);
+        let t: Type = FromRaw::from_raw(3).unwrap();
         assert_eq!(Type::MD, t);
     }
 
     #[test]
     fn test_rtype_mf_from_raw() {
-        let t: Type = FromRaw::from_raw(4);
+        let t: Type = FromRaw::from_raw(4).unwrap();
         assert_eq!(Type::MF, t);
     }
 
     #[test]
     fn test_rtype_cname_from_raw() {
-        let t: Type = FromRaw::from_raw(5);
+        let t: Type = FromRaw::from_raw(5).unwrap();
         assert_eq!(Type::CNAME, t);
     }
 
     #[test]
     fn test_rtype_soa_from_raw() {
-        let t: Type = FromRaw::from_raw(6);
+        let t: Type = FromRaw::from_raw(6).unwrap();
         assert_eq!(Type::SOA, t);
     }
 
     #[test]
     fn test_rtype_mb_from_raw() {
-        let t: Type = FromRaw::from_raw(7);
+        let t: Type = FromRaw::from_raw(7).unwrap();
         assert_eq!(Type::MB, t);
     }
 
     #[test]
     fn test_rtype_mg_from_raw() {
-        let t: Type = FromRaw::from_raw(8);
+        let t: Type = FromRaw::from_raw(8).unwrap();
         assert_eq!(Type::MG, t);
     }
 
     #[test]
     fn test_rtype_mr_from_raw() {
-        let t: Type = FromRaw::from_raw(9);
+        let t: Type = FromRaw::from_raw(9).unwrap();
         assert_eq!(Type::MR, t);
     }
 
     #[test]
     fn test_rtype_null_from_raw() {
-        let t: Type = FromRaw::from_raw(10);
+        let t: Type = FromRaw::from_raw(10).unwrap();
         assert_eq!(Type::NULL, t);
     }
 
     #[test]
     fn test_rtype_wks_from_raw() {
-        let t: Type = FromRaw::from_raw(11);
+        let t: Type = FromRaw::from_raw(11).unwrap();
         assert_eq!(Type::WKS, t);
     }
 
     #[test]
     fn test_rtype_ptr_from_raw() {
-        let t: Type = FromRaw::from_raw(12);
+        let t: Type = FromRaw::from_raw(12).unwrap();
         assert_eq!(Type::PTR, t);
     }
 
     #[test]
     fn test_rtype_hinfo_from_raw() {
-        let t: Type = FromRaw::from_raw(13);
+        let t: Type = FromRaw::from_raw(13).unwrap();
         assert_eq!(Type::HINFO, t);
     }
 
     #[test]
     fn test_rtype_minfo_from_raw() {
-        let t: Type = FromRaw::from_raw(14);
+        let t: Type = FromRaw::from_raw(14).unwrap();
         assert_eq!(Type::MINFO, t);
     }
 
     #[test]
     fn test_rtype_mx_from_raw() {
-        let t: Type = FromRaw::from_raw(15);
+        let t: Type = FromRaw::from_raw(15).unwrap();
         assert_eq!(Type::MX, t);
     }
 
     #[test]
     fn test_rtype_txt_from_raw() {
-        let t: Type = FromRaw::from_raw(16);
+        let t: Type = FromRaw::from_raw(16).unwrap();
         assert_eq!(Type::TXT, t);
     }
 
     #[test]
     fn test_rtype_rp_from_raw() {
-        let t: Type = FromRaw::from_raw(17);
+        let t: Type = FromRaw::from_raw(17).unwrap();
         assert_eq!(Type::RP, t);
     }
 
     #[test]
     fn test_rtype_afsdb_from_raw() {
-        let t: Type = FromRaw::from_raw(18);
+        let t: Type = FromRaw::from_raw(18).unwrap();
         assert_eq!(Type::AFSDB, t);
     }
 
     #[test]
     fn test_rtype_x25_from_raw() {
-        let t: Type = FromRaw::from_raw(19);
+        let t: Type = FromRaw::from_raw(19).unwrap();
         assert_eq!(Type::X25, t);
     }
 
     #[test]
     fn test_rtype_isdn_from_raw() {
-        let t: Type = FromRaw::from_raw(20);
+        let t: Type = FromRaw::from_raw(20).unwrap();
         assert_eq!(Type::ISDN, t);
     }
 
     #[test]
     fn test_rtype_rt_from_raw() {
-        let t: Type = FromRaw::from_raw(21);
+        let t: Type = FromRaw::from_raw(21).unwrap();
         assert_eq!(Type::RT, t);
     }
 
     #[test]
     fn test_rtype_nsap_from_raw() {
-        let t: Type = FromRaw::from_raw(22);
+        let t: Type = FromRaw::from_raw(22).unwrap();
         assert_eq!(Type::NSAP, t);
     }
 
     #[test]
     fn test_rtype_nsapptr_from_raw() {
-        let t: Type = FromRaw::from_raw(23);
+        let t: Type = FromRaw::from_raw(23).unwrap();
         assert_eq!(Type::NSAPPTR, t);
     }
 
     #[test]
     fn test_rtype_sig_from_raw() {
-        let t: Type = FromRaw::from_raw(24);
+        let t: Type = FromRaw::from_raw(24).unwrap();
         assert_eq!(Type::SIG, t);
     }
 
     #[test]
     fn test_rtype_key_from_raw() {
-        let t: Type = FromRaw::from_raw(25);
+        let t: Type = FromRaw::from_raw(25).unwrap();
         assert_eq!(Type::KEY, t);
     }
 
     #[test]
     fn test_rtype_px_from_raw() {
-        let t: Type = FromRaw::from_raw(26);
+        let t: Type = FromRaw::from_raw(26).unwrap();
         assert_eq!(Type::PX, t);
     }
 
     #[test]
     fn test_rtype_gpos_from_raw() {
-        let t: Type = FromRaw::from_raw(27);
+        let t: Type = FromRaw::from_raw(27).unwrap();
         assert_eq!(Type::GPOS, t);
     }
 
     #[test]
     fn test_rtype_aaaa_from_raw() {
-        let t: Type = FromRaw::from_raw(28);
+        let t: Type = FromRaw::from_raw(28).unwrap();
         assert_eq!(Type::AAAA, t);
     }
 
     #[test]
     fn test_rtype_loc_from_raw() {
-        let t: Type = FromRaw::from_raw(29);
+        let t: Type = FromRaw::from_raw(29).unwrap();
         assert_eq!(Type::LOC, t);
     }
 
     #[test]
     fn test_rtype_nxt_from_raw() {
-        let t: Type = FromRaw::from_raw(30);
+        let t: Type = FromRaw::from_raw(30).unwrap();
         assert_eq!(Type::NXT, t);
     }
 
     #[test]
     fn test_rtype_eid_from_raw() {
-        let t: Type = FromRaw::from_raw(31);
+        let t: Type = FromRaw::from_raw(31).unwrap();
         assert_eq!(Type::EID, t);
     }
 
     #[test]
     fn test_rtype_nimloc_from_raw() {
-        let t: Type = FromRaw::from_raw(32);
+        let t: Type = FromRaw::from_raw(32).unwrap();
         assert_eq!(Type::NIMLOC, t);
     }
 
     #[test]
     fn test_rtype_srv_from_raw() {
-        let t: Type = FromRaw::from_raw(33);
+        let t: Type = FromRaw::from_raw(33).unwrap();
         assert_eq!(Type::SRV, t);
     }
 
     #[test]
     fn test_rtype_atma_from_raw() {
-        let t: Type = FromRaw::from_raw(34);
+        let t: Type = FromRaw::from_raw(34).unwrap();
         assert_eq!(Type::ATMA, t);
     }
 
     #[test]
     fn test_rtype_naptr_from_raw() {
-        let t: Type = FromRaw::from_raw(35);
+        let t: Type = FromRaw::from_raw(35).unwrap();
         assert_eq!(Type::NAPTR, t);
     }
 
     #[test]
     fn test_rtype_kx_from_raw() {
-        let t: Type = FromRaw::from_raw(36);
+        let t: Type = FromRaw::from_raw(36).unwrap();
         assert_eq!(Type::KX, t);
     }
 
     #[test]
     fn test_rtype_cert_from_raw() {
-        let t: Type = FromRaw::from_raw(37);
+        let t: Type = FromRaw::from_raw(37).unwrap();
         assert_eq!(Type::CERT, t);
     }
 
     #[test]
     fn test_rtype_dname_from_raw() {
-        let t: Type = FromRaw::from_raw(39);
+        let t: Type = FromRaw::from_raw(39).unwrap();
         assert_eq!(Type::DNAME, t);
     }
 
     #[test]
     fn test_rtype_opt_from_raw() {
-        let t: Type = FromRaw::from_raw(41);
+        let t: Type = FromRaw::from_raw(41).unwrap();
         assert_eq!(Type::OPT, t);
     }
 
     #[test]
     fn test_rtype_ds_from_raw() {
-        let t: Type = FromRaw::from_raw(43);
+        let t: Type = FromRaw::from_raw(43).unwrap();
         assert_eq!(Type::DS, t);
     }
 
     #[test]
     fn test_rtype_sshfp_from_raw() {
-        let t: Type = FromRaw::from_raw(44);
+        let t: Type = FromRaw::from_raw(44).unwrap();
         assert_eq!(Type::SSHFP, t);
     }
 
     #[test]
     fn test_rtype_ipseckey_from_raw() {
-        let t: Type = FromRaw::from_raw(45);
+        let t: Type = FromRaw::from_raw(45).unwrap();
         assert_eq!(Type::IPSECKEY, t);
     }
 
     #[test]
     fn test_rtype_rrsig_from_raw() {
-        let t: Type = FromRaw::from_raw(46);
+        let t: Type = FromRaw::from_raw(46).unwrap();
         assert_eq!(Type::RRSIG, t);
     }
 
     #[test]
     fn test_rtype_nsec_from_raw() {
-        let t: Type = FromRaw::from_raw(47);
+        let t: Type = FromRaw::from_raw(47).unwrap();
         assert_eq!(Type::NSEC, t);
     }
 
     #[test]
     fn test_rtype_dnskey_from_raw() {
-        let t: Type = FromRaw::from_raw(48);
+        let t: Type = FromRaw::from_raw(48).unwrap();
         assert_eq!(Type::DNSKEY, t);
     }
 
     #[test]
     fn test_rtype_dhcid_from_raw() {
-        let t: Type = FromRaw::from_raw(49);
+        let t: Type = FromRaw::from_raw(49).unwrap();
         assert_eq!(Type::DHCID, t);
     }
 
     #[test]
     fn test_rtype_nsec3_from_raw() {
-        let t: Type = FromRaw::from_raw(50);
+        let t: Type = FromRaw::from_raw(50).unwrap();
         assert_eq!(Type::NSEC3, t);
     }
 
     #[test]
     fn test_rtype_nsec3param_from_raw() {
-        let t: Type = FromRaw::from_raw(51);
+        let t: Type = FromRaw::from_raw(51).unwrap();
         assert_eq!(Type::NSEC3PARAM, t);
     }
 
     #[test]
     fn test_rtype_tlsa_from_raw() {
-        let t: Type = FromRaw::from_raw(52);
+        let t: Type = FromRaw::from_raw(52).unwrap();
         assert_eq!(Type::TLSA, t);
     }
 
     #[test]
     fn test_rtype_hip_from_raw() {
-        let t: Type = FromRaw::from_raw(55);
+        let t: Type = FromRaw::from_raw(55).unwrap();
         assert_eq!(Type::HIP, t);
     }
 
     #[test]
     fn test_rtype_ninfo_from_raw() {
-        let t: Type = FromRaw::from_raw(56);
+        let t: Type = FromRaw::from_raw(56).unwrap();
         assert_eq!(Type::NINFO, t);
     }
 
     #[test]
     fn test_rtype_rkey_from_raw() {
-        let t: Type = FromRaw::from_raw(57);
+        let t: Type = FromRaw::from_raw(57).unwrap();
         assert_eq!(Type::RKEY, t);
     }
 
     #[test]
     fn test_rtype_talink_from_raw() {
-        let t: Type = FromRaw::from_raw(58);
+        let t: Type = FromRaw::from_raw(58).unwrap();
         assert_eq!(Type::TALINK, t);
     }
 
     #[test]
     fn test_rtype_cds_from_raw() {
-        let t: Type = FromRaw::from_raw(59);
+        let t: Type = FromRaw::from_raw(59).unwrap();
         assert_eq!(Type::CDS, t);
     }
 
     #[test]
     fn test_rtype_openpgpkey_from_raw() {
-        let t: Type = FromRaw::from_raw(61);
+        let t: Type = FromRaw::from_raw(61).unwrap();
         assert_eq!(Type::OPENPGPKEY, t);
     }
 
     #[test]
     fn test_rtype_spf_from_raw() {
-        let t: Type = FromRaw::from_raw(99);
+        let t: Type = FromRaw::from_raw(99).unwrap();
         assert_eq!(Type::SPF, t);
     }
 
     #[test]
     fn test_rtype_uinfo_from_raw() {
-        let t: Type = FromRaw::from_raw(100);
+        let t: Type = FromRaw::from_raw(100).unwrap();
         assert_eq!(Type::UINFO, t);
     }
 
     #[test]
     fn test_rtype_uid_from_raw() {
-        let t: Type = FromRaw::from_raw(101);
+        let t: Type = FromRaw::from_raw(101).unwrap();
         assert_eq!(Type::UID, t);
     }
 
     #[test]
     fn test_rtype_gid_from_raw() {
-        let t: Type = FromRaw::from_raw(102);
+        let t: Type = FromRaw::from_raw(102).unwrap();
         assert_eq!(Type::GID, t);
     }
 
     #[test]
     fn test_rtype_unspec_from_raw() {
-        let t: Type = FromRaw::from_raw(103);
+        let t: Type = FromRaw::from_raw(103).unwrap();
         assert_eq!(Type::UNSPEC, t);
     }
 
     #[test]
     fn test_rtype_nid_from_raw() {
-        let t: Type = FromRaw::from_raw(104);
+        let t: Type = FromRaw::from_raw(104).unwrap();
         assert_eq!(Type::NID, t);
     }
 
     #[test]
     fn test_rtype_l32_from_raw() {
-        let t: Type = FromRaw::from_raw(105);
+        let t: Type = FromRaw::from_raw(105).unwrap();
         assert_eq!(Type::L32, t);
     }
 
     #[test]
     fn test_rtype_l64_from_raw() {
-        let t: Type = FromRaw::from_raw(106);
+        let t: Type = FromRaw::from_raw(106).unwrap();
         assert_eq!(Type::L64, t);
     }
 
     #[test]
     fn test_rtype_lp_from_raw() {
-        let t: Type = FromRaw::from_raw(107);
+        let t: Type = FromRaw::from_raw(107).unwrap();
         assert_eq!(Type::LP, t);
     }
 
     #[test]
     fn test_rtype_eui48_from_raw() {
-        let t: Type = FromRaw::from_raw(108);
+        let t: Type = FromRaw::from_raw(108).unwrap();
         assert_eq!(Type::EUI48, t);
     }
 
     #[test]
     fn test_rtype_eui64_from_raw() {
-        let t: Type = FromRaw::from_raw(109);
+        let t: Type = FromRaw::from_raw(109).unwrap();
         assert_eq!(Type::EUI64, t);
     }
 
     #[test]
     fn test_rtype_tkey_from_raw() {
-        let t: Type = FromRaw::from_raw(249);
+        let t: Type = FromRaw::from_raw(249).unwrap();
         assert_eq!(Type::TKEY, t);
     }
 
     #[test]
     fn test_rtype_tsig_from_raw() {
-        let t: Type = FromRaw::from_raw(250);
+        let t: Type = FromRaw::from_raw(250).unwrap();
         assert_eq!(Type::TSIG, t);
     }
 
     #[test]
     fn test_rtype_ixfr_from_raw() {
-        let t: Type = FromRaw::from_raw(251);
+        let t: Type = FromRaw::from_raw(251).unwrap();
         assert_eq!(Type::IXFR, t);
     }
 
     #[test]
     fn test_rtype_axfr_from_raw() {
-        let t: Type = FromRaw::from_raw(252);
+        let t: Type = FromRaw::from_raw(252).unwrap();
         assert_eq!(Type::AXFR, t);
     }
 
     #[test]
     fn test_rtype_mailb_from_raw() {
-        let t: Type = FromRaw::from_raw(253);
+        let t: Type = FromRaw::from_raw(253).unwrap();
         assert_eq!(Type::MAILB, t);
     }
 
     #[test]
     fn test_rtype_maila_from_raw() {
-        let t: Type = FromRaw::from_raw(254);
+        let t: Type = FromRaw::from_raw(254).unwrap();
         assert_eq!(Type::MAILA, t);
     }
 
     #[test]
     fn test_rtype_any_from_raw() {
-        let t: Type = FromRaw::from_raw(255);
+        let t: Type = FromRaw::from_raw(255).unwrap();
         assert_eq!(Type::ANY, t);
     }
 
     #[test]
     fn test_rtype_uri_from_raw() {
-        let t: Type = FromRaw::from_raw(256);
+        let t: Type = FromRaw::from_raw(256).unwrap();
         assert_eq!(Type::URI, t);
     }
 
     #[test]
     fn test_rtype_caa_from_raw() {
-        let t: Type = FromRaw::from_raw(257);
+        let t: Type = FromRaw::from_raw(257).unwrap();
         assert_eq!(Type::CAA, t);
     }
 
     #[test]
     fn test_rtype_ta_from_raw() {
-        let t: Type = FromRaw::from_raw(32768);
+        let t: Type = FromRaw::from_raw(32768).unwrap();
         assert_eq!(Type::TA, t);
     }
 
     #[test]
     fn test_rtype_dlv_from_raw() {
-        let t: Type = FromRaw::from_raw(32769);
+        let t: Type = FromRaw::from_raw(32769).unwrap();
         assert_eq!(Type::DLV, t);
     }
 
     #[test]
     fn test_rtype_reserved_from_raw() {
-        let t: Type = FromRaw::from_raw(65535);
+        let t: Type = FromRaw::from_raw(65535).unwrap();
         assert_eq!(Type::Reserved, t);
     }
 
     #[test]
     fn test_rcode_success() {
-        assert_eq!(types::SUCCESS, types::rcode_from_str("SUCCESS"));
+        assert_eq!(types::SUCCESS, types::rcode_from_str("SUCCESS").unwrap());
     }
 
     #[test]
     fn test_rcode_formerr() {
-        assert_eq!(types::FORMERR, types::rcode_from_str("FORMERR"));
+        assert_eq!(types::FORMERR, types::rcode_from_str("FORMERR").unwrap());
     }
 
     #[test]
     fn test_rcode_servfail() {
-        assert_eq!(types::SERVFAIL, types::rcode_from_str("SERVFAIL"));
+        assert_eq!(types::SERVFAIL, types::rcode_from_str("SERVFAIL").unwrap());
     }
 
     #[test]
     fn test_rcode_nameerror() {
-        assert_eq!(types::NAMEERROR, types::rcode_from_str("NAMEERROR"));
+        assert_eq!(types::NAMEERROR, types::rcode_from_str("NAMEERROR").unwrap());
     }
 
     #[test]
     fn test_rcode_notimpl() {
-        assert_eq!(types::NOTIMPL, types::rcode_from_str("NOTIMPL"));
+        assert_eq!(types::NOTIMPL, types::rcode_from_str("NOTIMPL").unwrap());
     }
 
     #[test]
     fn test_rcode_refused() {
-        assert_eq!(types::REFUSED, types::rcode_from_str("REFUSED"));
+        assert_eq!(types::REFUSED, types::rcode_from_str("REFUSED").unwrap());
     }
 
     #[test]
     fn test_rcode_yxdomain() {
-        assert_eq!(types::YXDOMAIN, types::rcode_from_str("YXDOMAIN"));
+        assert_eq!(types::YXDOMAIN, types::rcode_from_str("YXDOMAIN").unwrap());
     }
 
     #[test]
     fn test_rcode_yxrrset() {
-        assert_eq!(types::YXRRSET, types::rcode_from_str("YXRRSET"));
+        assert_eq!(types::YXRRSET, types::rcode_from_str("YXRRSET").unwrap());
     }
 
     #[test]
     fn test_rcode_nxrrset() {
-        assert_eq!(types::NXRRSET, types::rcode_from_str("NXRRSET"));
+        assert_eq!(types::NXRRSET, types::rcode_from_str("NXRRSET").unwrap());
     }
 
     #[test]
     fn test_rcode_notauth() {
-        assert_eq!(types::NOTAUTH, types::rcode_from_str("NOTAUTH"));
+        assert_eq!(types::NOTAUTH, types::rcode_from_str("NOTAUTH").unwrap());
     }
 
     #[test]
     fn test_rcode_notzone() {
-        assert_eq!(types::NOTZONE, types::rcode_from_str("NOTZONE"));
+        assert_eq!(types::NOTZONE, types::rcode_from_str("NOTZONE").unwrap());
     }
 
     #[test]
     fn test_rcode_badsig() {
-        assert_eq!(types::BADSIG, types::rcode_from_str("BADSIG"));
+        assert_eq!(types::BADSIG, types::rcode_from_str("BADSIG").unwrap());
     }
 
     #[test]
     fn test_rcode_badvers() {
-        assert_eq!(types::BADVERS, types::rcode_from_str("BADVERS"));
+        assert_eq!(types::BADVERS, types::rcode_from_str("BADVERS").unwrap());
     }
 
     #[test]
     fn test_rcode_badkey() {
-        assert_eq!(types::BADKEY, types::rcode_from_str("BADKEY"));
+        assert_eq!(types::BADKEY, types::rcode_from_str("BADKEY").unwrap());
     }
 
     #[test]
     fn test_rcode_badtime() {
-        assert_eq!(types::BADTIME, types::rcode_from_str("BADTIME"));
+        assert_eq!(types::BADTIME, types::rcode_from_str("BADTIME").unwrap());
     }
 
     #[test]
     fn test_rcode_badmode() {
-        assert_eq!(types::BADMODE, types::rcode_from_str("BADMODE"));
+        assert_eq!(types::BADMODE, types::rcode_from_str("BADMODE").unwrap());
     }
 
     #[test]
     fn test_rcode_badname() {
-        assert_eq!(types::BADNAME, types::rcode_from_str("BADNAME"));
+        assert_eq!(types::BADNAME, types::rcode_from_str("BADNAME").unwrap());
     }
 
     #[test]
     fn test_rcode_badalg() {
-        assert_eq!(types::BADALG, types::rcode_from_str("BADALG"));
+        assert_eq!(types::BADALG, types::rcode_from_str("BADALG").unwrap());
     }
 
     #[test]
     fn test_rcode_badtrunc() {
-        assert_eq!(types::BADTRUNC, types::rcode_from_str("BADTRUNC"));
+        assert_eq!(types::BADTRUNC, types::rcode_from_str("BADTRUNC").unwrap());
     }
 }

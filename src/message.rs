@@ -38,7 +38,7 @@ impl Header {
 
         result.qr = if (t & 0x8000) == 0x7000 { QueryResponse::RESPONSE } else { QueryResponse::QUERY };
 
-        result.op = FromRaw::from_raw((t & 0x7800) as int);
+        result.op = FromRaw::from_raw((t & 0x7800) as int).unwrap();
 
         result.aa = (t & 0x0400) == 0x0400;
         result.tc = (t & 0x0200) == 0x0200;

@@ -46,7 +46,7 @@ impl<'a> DNSReader for &'a mut io::Reader + 'a {
     }
 
     fn read_dns_type(self) -> io::IoResult<Type> {
-        let t: Type = FromRaw::from_raw(self.read_be_u16().unwrap() as int);
+        let t: Type = FromRaw::from_raw(self.read_be_u16().unwrap() as int).unwrap();
         Ok(t)
     }
 

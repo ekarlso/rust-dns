@@ -21,10 +21,10 @@ fn get_default_server() -> SocketAddr {
 
 // A client config
 pub struct ClientConfig {
-    bind: Option<SocketAddr>,
-    servers: Vec<SocketAddr>,
-    search: Vec<String>,
-    attempts: int
+    pub bind: Option<SocketAddr>,
+    pub servers: Vec<SocketAddr>,
+    pub search: Vec<String>,
+    pub attempts: int
 }
 
 // Provide default config

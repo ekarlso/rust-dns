@@ -180,7 +180,7 @@ pub fn rcode_from_str(s: &str) -> Option<u16> {
         "BADNAME"   => Some(BADNAME),
         "BADALG"    => Some(BADALG),
         "BADTRUNC"  => Some(BADTRUNC),
-        x           => panic!("invalid rcode {}", s)
+        _           => None
     }
 }
 
@@ -356,7 +356,7 @@ impl FromRaw for Type {
 }
 
 impl FromStr for Type {
-   fn from_str(s: &str) -> Option<Type> {
+    fn from_str(s: &str) -> Option<Type> {
         match s {
             "NONE"         => Some(Type::NONE),
             "A"            => Some(Type::A),

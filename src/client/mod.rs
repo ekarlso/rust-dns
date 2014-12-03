@@ -13,7 +13,7 @@ use message::Message;
 pub mod config;
 
 pub struct Client {
-    config: ClientConfig,
+    pub config: ClientConfig,
 }
 
 impl Client {
